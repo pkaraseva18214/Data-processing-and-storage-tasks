@@ -8,7 +8,7 @@
 
 (defn start-eating [phil]
   (dosync
-    (if (every? true? (map ensure (:forks @phil)))  ; <-- the essential solution
+    (if (every? true? (map ensure (:forks @phil)))
       (do
         (doseq [f (:forks @phil)] (alter f not))
         (alter phil assoc :eating? true)
@@ -31,22 +31,22 @@
         (Thread/sleep (rand-int max-think-duration)))
       (Thread/sleep retry-interval))))
 
-(def *forks* (cycle (take 5 (repeatedly #(make-fork)))))
+(def forks (cycle (take 5 (repeatedly #(make-fork)))))
 
-(def *philosophers*
-  (doall (map #(make-philosopher %1 [(nth *forks* %2) (nth *forks* (inc %2))] 1000)
-              ["Aristotle" "Kant" "Spinoza" "Marx" "Russell"]
+(def philosophers
+  (doall (map #(make-philosopher %1 [(nth forks %2) (nth forks (inc %2))] 200)
+              ["Phil. 1" "Phil. 2" "Phil.3" "Phil. 4" "Phil. 5"]
               (range 5))))
 
 (defn start []
-  (doseq [phil *philosophers*]
+  (doseq [phil philosophers]
     (.start (Thread. #(dine phil 5 100 100)))))
 
 (defn status []
   (dosync
     (doseq [i (range 5)]
-      (let [f @(nth *forks* i)
-            p @(nth *philosophers* i)]
+      (let [f @(nth forks i)
+            p @(nth philosophers i)]
         (println (str "fork: available=" f))
         (println (str (:name p)
                       ": eating=" (:eating? p)
