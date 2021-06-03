@@ -1,0 +1,42 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:cmp="http://fit.nsu.ru/people"
+            targetNamespace="http://fit.nsu.ru/people"
+            elementFormDefault="unqualified"
+            attributeFormDefault="unqualified">
+
+    <xsd:simpleType name="gender-type">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="F"/>
+            <xsd:enumeration value="M"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="related-person-type">
+        <xsd:attribute name="person-id" type="xsd:IDREF" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="person-type">
+        <xsd:sequence>
+            <xsd:element name="gender" minOccurs="1" maxOccurs="1" type="cmp:gender-type"/>
+            <xsd:element name="mother" minOccurs="0" maxOccurs="1" type="cmp:related-person-type"/>
+            <xsd:element name="father" minOccurs="0" maxOccurs="1" type="cmp:related-person-type"/>
+            <xsd:element name="spouse" minOccurs="0" maxOccurs="1" type="cmp:related-person-type"/>
+            <xsd:element name="sister" minOccurs="0" maxOccurs="unbounded" type="cmp:related-person-type"/>
+            <xsd:element name="brother" minOccurs="0" maxOccurs="unbounded" type="cmp:related-person-type"/>
+            <xsd:element name="son" minOccurs="0" maxOccurs="unbounded" type="cmp:related-person-type"/>
+            <xsd:element name="daughter" minOccurs="0" maxOccurs="unbounded" type="cmp:related-person-type"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="person-first-name" type="xsd:string" use="required"/>
+        <xsd:attribute name="person-last-name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <xsd:element name="people">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="person" type="cmp:person-type" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+		<xsd:attribute name="people-count" type="xsd:string" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
